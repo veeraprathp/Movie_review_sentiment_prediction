@@ -25,7 +25,7 @@ def preprocess_text(text):
 def predict_sentiment(review):
     preprocessed_input = preprocess_text(review)
     prediction = model.predict(preprocessed_input)
-    sentiment = 'Positive' if prediction[0][0] > 0.5 else 'Negative'
+    sentiment = 'Positive' if prediction[0][0] > 0.3 else 'Negative'
     return sentiment, prediction
 
 # Streamlit UI
