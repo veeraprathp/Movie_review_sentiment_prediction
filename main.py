@@ -10,7 +10,7 @@ word_index = imdb.get_word_index()
 reverse_word_index = {value: key for key, value in word_index.items()}
 
 # Load the pre-trained model
-model = load_model('RNN_imdb.h5')
+model = load_model('models/RNN_imdb.h5')
 
 def decode_review(encoded_review):
     return ' '.join([reverse_word_index.get(i - 3, '?') for i in encoded_review])
@@ -29,17 +29,47 @@ def predict_sentiment(review):
     return sentiment, prediction
 
 # Streamlit UI
-st.title("Movie Review Sentiment Analysis")
-st.write("Enter the movie review to classify it as positive or negative")
+st.set_page_config(page_title="Movie Review Sentiment Analysis", page_icon="🎬", layout="centered")
+
+# Page Title and Description
+st.title("🎬 Movie Review Sentiment Analysis")
+st.markdown(
+    """
+    Enter a movie review to classify it as positive or negative. This app uses a pre-trained Recurrent Neural Network (RNN) model 
+    to analyze the sentiment of the review. The model has been trained on the IMDB dataset.
+    """
+)
 
 # User input
-user_input = st.text_area('Movie Review')
+user_input = st.text_area(
+    'Movie Review',
+    height=200,
+    placeholder="Type your movie review here..."
+)
 
+# Classification Button
 if st.button('Classify'):
     if user_input:
         # Make predictions
         sentiment, prediction = predict_sentiment(user_input)
-        st.write(f'Sentiment: {sentiment}')
-        st.write(f'Prediction Score: {prediction[0][0]:.4f}')
+        # Display results
+        st.subheader('Prediction Result')
+        st.write(f'**Sentiment:** {sentiment}')
+        st.write(f'**Prediction Score:** {prediction[0][0]:.4f}')
+        
+        # Add an emoji based on sentiment
+        if sentiment == 'Positive':
+            st.write("😊")
+        else:
+            st.write("😞")
     else:
-        st.write('Please enter a movie review.')
+        st.warning('Please enter a movie review to classify.')
+
+# Add a footer
+st.markdown(
+    """
+    ---
+    Developed by [Veera Prathap](https://your-website.com). 
+    For more information, visit [GitHub](https://github.com/veeraprathp/Movie_review_sentiment_prediction).
+    """
+)
